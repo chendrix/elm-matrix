@@ -1,6 +1,7 @@
 ### Elm ###
 elm-stuff
 elm.js
+build
 
 # Elm test artifacts
 elm-io.sh
