@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "1.0.0",
     "summary": "Library for working with matrices/grids",
     "repository": "https://github.com/chendrix/elm-matrix.git",
     "license": "MIT",
