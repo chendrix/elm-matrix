@@ -1,0 +1,16 @@
+{
+    "version": "0.0.1",
+    "summary": "Library for working with matrices/grids",
+    "repository": "https://github.com/chendrix/elm-matrix.git",
+    "license": "MIT",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [
+        "Matrix"
+    ],
+    "dependencies": {
+        "elm-lang/core": "2.0.0 <= v < 3.0.0"
+    },
+    "elm-version": "0.15.0 <= v < 0.16.0"
+}
