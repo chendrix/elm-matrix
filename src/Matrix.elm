@@ -18,7 +18,7 @@ module Matrix where
 @docs map, mapWithLocation, flatten
 
 ## Access
-@docs elementAt
+@docs elementAt, colCount, rowCount
 
 ## Convert to other types
 @docs toList
@@ -170,3 +170,15 @@ flatten m =
 elementAt : Location -> Matrix a -> Maybe a
 elementAt location m =
   Array.get (row location) m `andThen` Array.get (col location)
+
+{-| Get the number of columns in a matrix
+-}
+colCount : Matrix a -> Int
+colCount m =
+  Array.get 0 m |> Maybe.map Array.length |> Maybe.withDefault 0
+
+{-| Get the number of rows in a matrix
+-}
+rowCount : Matrix a -> Int
+rowCount m =
+  Array.length m
