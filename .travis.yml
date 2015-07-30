@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- stable
+install:
+- make travis/install
+- make package/install
+before_script:
+- make travis/before
+script: make test
