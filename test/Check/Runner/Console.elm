@@ -77,55 +77,34 @@ displayUnit n unitEvidence =
       [indent n (successMessage options)]
 
     Err options ->
-      []
-      --let
-      --    essentialParts =
-      --      [ li
-      --          []
-      --          [ text ("Counter example: " ++ options.counterExample) ]
-      --      , li
-      --          []
-      --          [ text ("Actual: " ++ options.actual) ]
-      --      , li
-      --          []
-      --          [ text ("Expected: " ++ options.expected)]
+      let
+        n' = n + 2
+        essentialParts =
+          [ "Counter example: " ++ options.counterExample
+          , "Actual: " ++ options.actual
+          , "Expected: " ++ options.expected
+          ]
 
-      --      ]
+        verboseParts =
+          [ "Seed: " ++ (toString options.seed.state)
+          , "Number of shrinking operations performed: " ++ (toString options.numberOfShrinks)
+          , "Before shrinking: "
+          ] ++
+          (List.map (indent 2)
+            [ "Counter example: " ++ options.original.counterExample
+            , "Actual: " ++ options.original.actual
+            , "Expected: " ++ options.original.expected
+            ]
+          )
+      in
+        failMessage options
+        :: List.map (indent 2) (essentialParts ++ verboseParts)
+        |> List.map (indent n)
 
-      --    verboseParts =
-      --      if not b then []
-      --      else
-      --        [ li
-      --            []
-      --            [ text ("Seed: " ++ (toString options.seed.state)) ]
-      --        , li
-      --            []
-      --            [ text ("Number of shrinking operations performed: " ++ (toString options.numberOfShrinks)) ]
-      --        , li
-      --            []
-      --            [ text "Before shrinking: "
-      --            , ul
-      --                []
-      --                [ li
-      --                    []
-      --                    [ text ("Counter example: " ++ options.original.counterExample) ]
-      --                , li
-      --                    []
-      --                    [ text ("Actual: " ++ options.original.actual) ]
-      --                , li
-      --                    []
-      --                    [ text ("Expected: " ++ options.original.expected) ]
-      --                ]
-      --            ]
-      --        ]
-      --in
-      --    li
-      --      [ style (unitStyle False) ]
-      --      [ text (options.name ++ " FAILED after " ++ (toString options.numberOfChecks) ++ " check"++ (if options.numberOfChecks == 1 then "" else "s") ++ "!")
-      --      , ul
-      --          [ style unitInnerStyle ]
-      --          (essentialParts ++ verboseParts)
-      --      ]
+
+failMessage : FailureOptions -> String
+failMessage options =
+  options.name ++ " FAILED after " ++ (toString options.numberOfChecks) ++ " check"++ (if options.numberOfChecks == 1 then "" else "s") ++ "!"
 
 successMessage : SuccessOptions -> String
 successMessage {name, seed, numberOfChecks} =
