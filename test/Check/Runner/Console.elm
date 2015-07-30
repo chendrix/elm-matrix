@@ -28,13 +28,13 @@ runDisplayVerbose = runDisplay' True
 runDisplay : Evidence -> IO ()
 runDisplay = runDisplay' False
 
+
 runDisplay' : Bool -> Evidence -> IO ()
 runDisplay' verbose evidence =
   let
-    summary = ""
     allPassed = isOk evidence
     results = display' verbose 0 evidence
-    out = summary ++ "\n\n" ++ (String.concat << List.intersperse "\n" <| results)
+    out = String.concat << List.intersperse "\n" <| results
   in
     putStrLn out >>>
       case allPassed of
