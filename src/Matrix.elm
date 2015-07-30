@@ -94,7 +94,7 @@ matrix : Int -> Int -> (Location -> a) -> Matrix a
 matrix numRows numCols f =
   Array.initialize numRows (
     \row -> Array.initialize numCols (
-      \col -> f (loc row col)))
+      \col -> f (loc (row + 1) (col + 1))))
 
 
 {-| Apply the function to every element in the matrix
