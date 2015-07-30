@@ -1,6 +1,6 @@
 import IO.IO exposing (..)
 import IO.Runner exposing (Request, Response, run)
-import Check.Runner.Console exposing (runDisplay)
+import Check.Runner.Console exposing (runDisplay, runDisplayVerbose)
 import Check exposing (..)
 
 import MatrixTest
@@ -15,6 +15,6 @@ result = quickCheck tests
 
 
 port requests : Signal Request
-port requests = run responses (runDisplay result)
+port requests = run responses (runDisplayVerbose result)
 
 port responses : Signal Response
