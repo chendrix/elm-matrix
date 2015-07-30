@@ -17,8 +17,11 @@ module Matrix where
 ## Transform
 @docs map, mapWithLocation, flatten
 
-## Access
-@docs elementAt, colCount, rowCount
+## Get and Set
+@docs get, set
+
+## Properties
+@docs colCount, rowCount
 
 ## Convert to other types
 @docs toList
@@ -32,7 +35,6 @@ import Maybe exposing (..)
 
 {-| An ordered collection of elements, all of a particular type, arranged into `m` rows and `n` columns.
 
-Matrices are 1-indexed.
 -}
 type alias Matrix a = Array.Array (Array.Array a)
 
@@ -79,16 +81,14 @@ square size = matrix size size
 Delegates to a function of type `Location -> a` to determine value to
 place at each element in the matrix.
 
-A reminder that matrices are 1-indexed.
-
     matrix 3 5 (\location ->
-      if (isEven row location) then "Hello" else "World")
+      if (isEven (row location)) then "Hello" else "World")
 
 will give back the matrix
 
-    World World World World World
     Hello Hello Hello Hello Hello
     World World World World World
+    Hello Hello Hello Hello Hello
 -}
 matrix : Int -> Int -> (Location -> a) -> Matrix a
 matrix numRows numCols f =
@@ -107,7 +107,7 @@ map f m =
 
 
 {-| Apply the function to every element in the list, where the first function argument
-is the location of the element. Reminder that matrices are 1 indexed.
+is the location of the element.
 
     let
       m = (square 2 (\_ -> 1))
@@ -163,19 +163,42 @@ flatten m =
 
 {-| Get the element at a particular location
 
-    elementAt (loc -1 2) (square 2 (\_ -> True)) == Nothing
+    get (loc -1 1) (square 2 (\_ -> True)) == Nothing
 
-    elementAt (loc 2 2) (fromList [[0, 1], [2, 3]]) == Just 3
+    get (loc 1 1) (fromList [[0, 1], [2, 3]]) == Just 3
 -}
-elementAt : Location -> Matrix a -> Maybe a
-elementAt location m =
+get : Location -> Matrix a -> Maybe a
+get location m =
   Array.get (row location) m `andThen` Array.get (col location)
+
+
+{-| Set the element at a particular location
+
+  set (loc -1 1) 42 (square 2 (\_ -> True)) == square 2 (\_ -> True)
+
+  set (loc 1 1) 42 (fromList [[0, 1], [2, 3]]) == fromList [[0, 1], [2, 42]]
+-}
+set : Location -> a -> Matrix a -> Matrix a
+set location value m =
+  let
+    maybeOldRow = Array.get (row location) m
+  in
+    case maybeOldRow of
+      Just oldRow ->
+        Array.set (col location) value oldRow
+        |> (\newRow -> Array.set (row location) newRow m)
+
+      Nothing -> m
+
 
 {-| Get the number of columns in a matrix
 -}
 colCount : Matrix a -> Int
 colCount m =
-  Array.get 0 m |> Maybe.map Array.length |> Maybe.withDefault 0
+  Array.get 0 m
+  |> Maybe.map Array.length
+  |> Maybe.withDefault 0
+
 
 {-| Get the number of rows in a matrix
 -}
