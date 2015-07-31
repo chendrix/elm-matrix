@@ -174,9 +174,9 @@ get location m =
 
 {-| Set the element at a particular location
 
-  set (loc -1 1) 42 (square 2 (\_ -> True)) == square 2 (\_ -> True)
+    set (loc -1 1) 42 (square 2 (\_ -> True)) == square 2 (\_ -> True)
 
-  set (loc 1 1) 42 (fromList [[0, 1], [2, 3]]) == fromList [[0, 1], [2, 42]]
+    set (loc 1 1) 42 (fromList [[0, 1], [2, 3]]) == fromList [[0, 1], [2, 42]]
 -}
 set : Location -> a -> Matrix a -> Matrix a
 set location value m =
