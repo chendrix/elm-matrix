@@ -29,4 +29,4 @@ matrixUsing f =
 
 location : Investigator Location
 location =
-  tuple (rangeInt -100 100, rangeInt -100 100)
+  tuple (rangeInt -10 50, rangeInt -10 50)

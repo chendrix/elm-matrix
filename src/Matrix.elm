@@ -18,7 +18,7 @@ module Matrix where
 @docs map, mapWithLocation, flatten
 
 ## Get and Set
-@docs get, set
+@docs get, set, update
 
 ## Properties
 @docs colCount, rowCount
@@ -100,7 +100,7 @@ matrix : Int -> Int -> (Location -> a) -> Matrix a
 matrix numRows numCols f =
   Array.initialize numRows (
     \row -> Array.initialize numCols (
-      \col -> f (loc (row + 1) (col + 1))))
+      \col -> f (loc row col)))
 
 
 {-| Apply the function to every element in the matrix
@@ -129,7 +129,7 @@ mapWithLocation f m =
   Array.indexedMap (
     \rowNum row -> Array.indexedMap (
       \colNum element ->
-        f (loc (rowNum + 1) (colNum + 1)) element
+        f (loc rowNum colNum) element
     ) row
   ) m
 
@@ -186,16 +186,27 @@ get location m =
 -}
 set : Location -> a -> Matrix a -> Matrix a
 set location value m =
-  let
-    maybeOldRow = Array.get (row location) m
-  in
-    case maybeOldRow of
-      Just oldRow ->
-        Array.set (col location) value oldRow
-        |> (\newRow -> Array.set (row location) newRow m)
+  update location (always value) m
 
-      Nothing -> m
 
+{-| Update the element at a particular location using the current value
+
+-}
+update : Location -> (a -> a) -> Matrix a -> Matrix a
+update location f m =
+  get location m
+  |> Maybe.map (
+    \current ->
+
+      Array.get (row location) m
+      |> Maybe.map (
+          \oldRow ->
+            Array.set (col location) (f current) oldRow
+            |> (\newRow -> Array.set (row location) newRow m)
+      )
+      |> Maybe.withDefault m
+  )
+  |> Maybe.withDefault m
 
 {-| Get the number of columns in a matrix
 -}

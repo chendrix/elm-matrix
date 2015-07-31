@@ -33,7 +33,7 @@ claim_get_and_set_are_inverses =
   `is`
     (\(location, matrix, value) -> Matrix.get location matrix |> M.map (always value))
   `for`
-    tuple3 (location, matrix float, float)
+    tuple3 (location, matrix int, int)
 
 claim_square_makes_the_right_sized_matrix =
   claim
