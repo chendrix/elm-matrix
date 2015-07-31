@@ -15,6 +15,6 @@ result = quickCheck tests
 
 
 port requests : Signal Request
-port requests = run responses (runDisplayVerbose result)
+port requests = run responses (runDisplay result)
 
 port responses : Signal Response

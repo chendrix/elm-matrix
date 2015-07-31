@@ -1,6 +1,7 @@
 module Check.Investigator.Matrix where
 
 import Check.Investigator exposing (..)
+import Shrink.Matrix as S
 import Shrink exposing (noShrink)
 
 import Random.Matrix
@@ -14,7 +15,7 @@ matrix v =
   in
     investigator
       (Random.Matrix.matrix width.generator height.generator v.generator)
-      (noShrink)
+      (S.matrix v.shrinker)
 
 matrixUsing : (Location -> a) -> Investigator (Matrix a)
 matrixUsing f =
