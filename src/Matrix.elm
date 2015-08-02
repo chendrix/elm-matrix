@@ -26,12 +26,18 @@ module Matrix where
 ## Convert to other types
 @docs toList
 
+## Extra
+@docs unit
+
 -}
 
 import Array
 import List
 import Maybe exposing (..)
 
+{-| meant to be removed -}
+unit : Int -> Int -> Location
+unit = loc
 
 {-| An ordered collection of elements, all of a particular type, arranged into `m` rows and `n` columns.
 
