@@ -14,10 +14,6 @@ RESOURCES_DIR = resources
 
 all: package/install clean compile
 
-Index.html = index.html
-open: all $(Index.html)
-	$(OPEN) $(Index.html)
-
 compile: matrix
 
 Matrix = Matrix
@@ -35,32 +31,12 @@ package/install:
 
 #### TEST ####################
 
-$(RESOURCES_DIR):
-	mkdir -p $(RESOURCES_DIR)
+TestRunner.elm = test/TestRunner.elm
+Test.html = $(BUILD_DIR)/test.html
+test: $(Test.html)
+$(Test.html): $(TestRunner.elm)
+	$(CC) $(TestRunner.elm) --output $(Test.html)
 
-test/bootstrap:
-	npm install jsdom
+test/open: test
+	$(OPEN) $(Test.html)
 
-ElmIo.sh = $(RESOURCES_DIR)/elm-io.sh
-test/install: $(ElmIo.sh)
-$(ElmIo.sh): $(RESOURCES_DIR)
-	curl https://raw.githubusercontent.com/maxsnew/IO/1.0.1/elm-io.sh > $(ElmIo.sh)
-
-TestRunner.elm = TestRunner.elm
-RawTest.js = $(BUILD_DIR)/raw-test.js
-Test.js = $(BUILD_DIR)/test.js
-test/before: $(Test.js)
-$(Test.js): $(TestRunner.elm) $(ElmIo.sh)
-	$(CC) $(TestRunner.elm) --output $(RawTest.js)
-	bash $(ElmIo.sh) $(RawTest.js) $(Test.js)
-
-test: $(Test.js)
-	$(NODE) $(Test.js)
-
-
-#### TRAVIS ###################
-
-travis/install: test/bootstrap
-	npm install --global elm
-
-travis/before: $(Test.js)
