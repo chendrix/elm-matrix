@@ -4,7 +4,7 @@ import Check.Investigator exposing (..)
 import Shrink.Matrix as S
 import Shrink exposing (noShrink)
 
-import Random.Matrix
+import Matrix.Random
 import Matrix exposing (Matrix, Location)
 
 matrix : Investigator a -> Investigator (Matrix a)
@@ -14,7 +14,7 @@ matrix v =
     height = rangeInt 0 50
   in
     investigator
-      (Random.Matrix.matrix width.generator height.generator v.generator)
+      (Matrix.Random.matrix width.generator height.generator v.generator)
       (S.matrix v.shrinker)
 
 matrixUsing : (Location -> a) -> Investigator (Matrix a)
@@ -24,7 +24,7 @@ matrixUsing f =
     height = rangeInt 0 50
   in
     investigator
-      (Random.Matrix.matrixUsing width.generator height.generator f)
+      (Matrix.Random.matrixUsing width.generator height.generator f)
       (noShrink)
 
 location : Investigator Location

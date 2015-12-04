@@ -1,5 +1,5 @@
 {
-    "version": "3.0.1",
+    "version": "3.1.0",
     "summary": "Library for working with matrices/grids",
     "repository": "https://github.com/chendrix/elm-matrix.git",
     "license": "MIT",
@@ -8,7 +8,8 @@
         "test"
     ],
     "exposed-modules": [
-        "Matrix"
+        "Matrix",
+        "Matrix.Random"
     ],
     "dependencies": {
         "NoRedInk/elm-check": "2.0.0 <= v < 3.0.0",

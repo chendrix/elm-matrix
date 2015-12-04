@@ -37,6 +37,6 @@ test: $(Test.html)
 $(Test.html): $(TestRunner.elm)
 	$(CC) $(TestRunner.elm) --output $(Test.html)
 
-test/open: test
+test/open: clean test
 	$(OPEN) $(Test.html)
 
