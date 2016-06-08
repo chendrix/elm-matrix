@@ -1,4 +1,4 @@
-module Shrink.Matrix where
+module Shrink.Matrix exposing (..)
 
 import Shrink exposing (Shrinker, array)
 import Matrix exposing (Matrix)

@@ -1,7 +1,7 @@
-module Check.Runner.Browser
+module Check.Runner.Browser exposing
   ( display
   , displayVerbose
-  ) where
+  )
 {-| Browser test runner for elm-check. This module provides functions to
 run and visualize tests in the browser.
 
@@ -52,7 +52,7 @@ displayStyle =
 
 {-| Display test results in the browser.
 -}
-display : Evidence -> Html
+display : Evidence -> Html msg
 display evidence =
   div
     [ style displayStyle ]
@@ -62,20 +62,20 @@ display evidence =
 {-| Verbose version of `display`. Contains additional information
 about the test results.
 -}
-displayVerbose : Evidence -> Html
+displayVerbose : Evidence -> Html msg
 displayVerbose evidence =
   div
     [ style displayStyle ]
     [ display' True evidence]
 
-display' : Bool -> Evidence -> Html
+display' : Bool -> Evidence -> Html msg
 display' b evidence = case evidence of
   Unit unitEvidence ->
     displayUnit b unitEvidence
   Multiple name evidences ->
     displaySuite b name evidences
 
-displaySuite : Bool -> String -> List Evidence -> Html
+displaySuite : Bool -> String -> List Evidence -> Html msg
 displaySuite b name evidences =
   li
     [ style (suiteStyle (areOk evidences)) ]
@@ -112,7 +112,7 @@ unitInnerStyle : Style
 unitInnerStyle =
   [ "color" ::: midnightBlue ]
 
-displayUnit : Bool -> UnitEvidence -> Html
+displayUnit : Bool -> UnitEvidence -> Html msg
 displayUnit b unitEvidence = case unitEvidence of
   Ok options ->
     li

@@ -1,4 +1,4 @@
-module Matrix where
+module Matrix exposing (..)
 
 {-| A library for creating and using 2-D matrices/grids. Geared towards
 2-D games.

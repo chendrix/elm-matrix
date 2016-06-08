@@ -1,8 +1,8 @@
-module MatrixTest where
+module MatrixTest exposing (..)
 
 import Check exposing (..)
-import Check.Investigator exposing (..)
-import Check.Investigator.Matrix exposing (..)
+import Check.Producer exposing (..)
+import Check.Producer.Matrix exposing (..)
 import Maybe as M exposing (..)
 import Debug
 

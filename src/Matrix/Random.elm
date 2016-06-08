@@ -1,4 +1,4 @@
-module Matrix.Random where
+module Matrix.Random exposing (..)
 
 {-| This module lets you generate random Matrices.
 
@@ -23,14 +23,14 @@ matrix widthGenerator heightGenerator elementGenerator =
   widthGenerator `andThen` \width ->
     heightGenerator `andThen` \height ->
       let
-        rowGenerator = 
+        rowGenerator =
           list width elementGenerator
           |> map Array.fromList
-        
-        matrixAsArrayGenerator = 
+
+        matrixAsArrayGenerator =
           list height rowGenerator
-          |> map Array.fromList 
-        
+          |> map Array.fromList
+
       in
         matrixAsArrayGenerator
 
@@ -55,6 +55,6 @@ In the example above, if it makes a 4x2 matrix, it will be
 -}
 matrixUsing  : Generator Int -> Generator Int -> (Location -> a) -> Generator (Matrix a)
 matrixUsing  widthGenerator heightGenerator f =
-  map2 (\width height -> 
+  map2 (\width height ->
     Matrix.matrix width height f
   ) widthGenerator heightGenerator
