@@ -32,21 +32,25 @@ import Array
 import List
 import Maybe exposing (..)
 
+
 {-| An ordered collection of elements, all of a particular type, arranged into `m` rows and `n` columns.
 
 -}
-type alias Matrix a = Array.Array (Array.Array a)
+type alias Matrix a =
+    Array.Array (Array.Array a)
 
 
 {-| A representation of a row number and a column number, used to locate and access elements in a matrix.
 -}
-type alias Location = (Int, Int)
+type alias Location =
+    ( Int, Int )
 
 
 {-| Turn two integers into a location
 -}
 loc : Int -> Int -> Location
-loc = (,)
+loc =
+    (,)
 
 
 {-| Extract the row number from a location
@@ -55,7 +59,8 @@ loc = (,)
 
 -}
 row : Location -> Int
-row = fst
+row =
+    Tuple.first
 
 
 {-| Extract the col number from a location
@@ -64,7 +69,8 @@ row = fst
 
 -}
 col : Location -> Int
-col = snd
+col =
+    Tuple.second
 
 
 {-| Create a square matrix of a certain size
@@ -73,7 +79,8 @@ col = snd
                             H H
 -}
 square : Int -> (Location -> a) -> Matrix a
-square size = matrix size size
+square size =
+    matrix size size
 
 
 {-| Initialize a new matrix of size `m x n`.
@@ -91,9 +98,11 @@ will give back the matrix
 -}
 matrix : Int -> Int -> (Location -> a) -> Matrix a
 matrix numRows numCols f =
-  Array.initialize numRows (
-    \row -> Array.initialize numCols (
-      \col -> f (loc row col)))
+    Array.initialize numRows
+        (\row ->
+            Array.initialize numCols
+                (\col -> f (loc row col))
+        )
 
 
 {-| Apply the function to every element in the matrix
@@ -102,7 +111,7 @@ matrix numRows numCols f =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f m =
-  Array.map (Array.map f) m
+    Array.map (Array.map f) m
 
 
 {-| Apply the function to every element in the list, where the first function argument
@@ -119,12 +128,15 @@ is the location of the element.
 -}
 mapWithLocation : (Location -> a -> b) -> Matrix a -> Matrix b
 mapWithLocation f m =
-  Array.indexedMap (
-    \rowNum row -> Array.indexedMap (
-      \colNum element ->
-        f (loc rowNum colNum) element
-    ) row
-  ) m
+    Array.indexedMap
+        (\rowNum row ->
+            Array.indexedMap
+                (\colNum element ->
+                    f (loc rowNum colNum) element
+                )
+                row
+        )
+        m
 
 
 {-| Convert a matrix to a list of lists
@@ -134,8 +146,8 @@ mapWithLocation f m =
 -}
 toList : Matrix a -> List (List a)
 toList m =
-  Array.map Array.toList m
-  |> Array.toList
+    Array.map Array.toList m
+        |> Array.toList
 
 
 {-| Convert a list of lists into a matrix
@@ -144,8 +156,8 @@ toList m =
 -}
 fromList : List (List a) -> Matrix a
 fromList l =
-  List.map Array.fromList l
-  |> Array.fromList
+    List.map Array.fromList l
+        |> Array.fromList
 
 
 {-| Convert a matrix to a single list
@@ -157,7 +169,7 @@ fromList l =
 -}
 flatten : Matrix a -> List a
 flatten m =
-  List.concat <| toList m
+    List.concat <| toList m
 
 
 {-| Get the element at a particular location
@@ -168,7 +180,7 @@ flatten m =
 -}
 get : Location -> Matrix a -> Maybe a
 get location m =
-  Array.get (row location) m `andThen` Array.get (col location)
+    Array.get (row location) m |> andThen (Array.get (col location))
 
 
 {-| Set the element at a particular location
@@ -179,7 +191,7 @@ get location m =
 -}
 set : Location -> a -> Matrix a -> Matrix a
 set location value m =
-  update location (always value) m
+    update location (always value) m
 
 
 {-| Update the element at a particular location using the current value
@@ -187,31 +199,31 @@ set location value m =
 -}
 update : Location -> (a -> a) -> Matrix a -> Matrix a
 update location f m =
-  get location m
-  |> Maybe.map (
-    \current ->
+    get location m
+        |> Maybe.map
+            (\current ->
+                Array.get (row location) m
+                    |> Maybe.map
+                        (\oldRow ->
+                            Array.set (col location) (f current) oldRow
+                                |> (\newRow -> Array.set (row location) newRow m)
+                        )
+                    |> Maybe.withDefault m
+            )
+        |> Maybe.withDefault m
 
-      Array.get (row location) m
-      |> Maybe.map (
-          \oldRow ->
-            Array.set (col location) (f current) oldRow
-            |> (\newRow -> Array.set (row location) newRow m)
-      )
-      |> Maybe.withDefault m
-  )
-  |> Maybe.withDefault m
 
 {-| Get the number of columns in a matrix
 -}
 colCount : Matrix a -> Int
 colCount m =
-  Array.get 0 m
-  |> Maybe.map Array.length
-  |> Maybe.withDefault 0
+    Array.get 0 m
+        |> Maybe.map Array.length
+        |> Maybe.withDefault 0
 
 
 {-| Get the number of rows in a matrix
 -}
 rowCount : Matrix a -> Int
 rowCount m =
-  Array.length m
+    Array.length m
