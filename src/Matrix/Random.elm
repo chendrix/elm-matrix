@@ -13,7 +13,7 @@ import Array exposing (foldl, Array)
 
 {-| Generate a matrix with a random width and height, filled with random elements.
 
-  matrix (Random.int 1 4) (Random.int 2 5) (Random.bool)
+    matrix (Random.int 1 4) (Random.int 2 5) (Random.bool)
 
 The example above will generate you a matrix anywhere between 1-4 rows, 2-5 columns, filled with random Booleans.
 
