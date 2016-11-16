@@ -25,13 +25,13 @@ matrixUsing : (Location -> a) -> Producer (Matrix a)
 matrixUsing f =
     let
         width =
-            rangeInt 0 50
+            Random.int 0 50
 
         height =
-            rangeInt 0 50
+            Random.int 0 50
     in
         Producer
-            (Matrix.Random.matrixUsing width.generator height.generator f)
+            (Matrix.Random.matrixUsing width height.generator f)
             (noShrink)
 
 

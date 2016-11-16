@@ -6,7 +6,7 @@ module Matrix.Random exposing (..)
 
 -}
 
-import Random exposing (..)
+import Random.Pcg as Random exposing (..)
 import Matrix exposing (Matrix, Location)
 import Array exposing (foldl, Array)
 
