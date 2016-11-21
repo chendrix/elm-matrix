@@ -20,19 +20,24 @@ The example above will generate you a matrix anywhere between 1-4 rows, 2-5 colu
 -}
 matrix : Generator Int -> Generator Int -> Generator a -> Generator (Matrix a)
 matrix widthGenerator heightGenerator elementGenerator =
-  widthGenerator `andThen` \width ->
-    heightGenerator `andThen` \height ->
-      let
-        rowGenerator =
-          list width elementGenerator
-          |> map Array.fromList
+    widthGenerator
+        |> andThen
+            (\width ->
+                heightGenerator
+                    |> andThen
+                        (\height ->
+                            let
+                                rowGenerator =
+                                    list width elementGenerator
+                                        |> map Array.fromList
 
-        matrixAsArrayGenerator =
-          list height rowGenerator
-          |> map Array.fromList
-
-      in
-        matrixAsArrayGenerator
+                                matrixAsArrayGenerator =
+                                    list height rowGenerator
+                                        |> map Array.fromList
+                            in
+                                matrixAsArrayGenerator
+                        )
+            )
 
 
 {-| Generate a matrix of a random width and height, but whose elements are generated via a function given the location of that element in the matrix.
@@ -53,8 +58,11 @@ In the example above, if it makes a 4x2 matrix, it will be
     F F F F
 
 -}
-matrixUsing  : Generator Int -> Generator Int -> (Location -> a) -> Generator (Matrix a)
-matrixUsing  widthGenerator heightGenerator f =
-  map2 (\width height ->
-    Matrix.matrix width height f
-  ) widthGenerator heightGenerator
+matrixUsing : Generator Int -> Generator Int -> (Location -> a) -> Generator (Matrix a)
+matrixUsing widthGenerator heightGenerator f =
+    map2
+        (\width height ->
+            Matrix.matrix width height f
+        )
+        widthGenerator
+        heightGenerator
