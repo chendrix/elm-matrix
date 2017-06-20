@@ -28,15 +28,3 @@ clean:
 
 package/install:
 	$(PACKAGE) $(INSTALL) $(PACKAGE_FLAGS)
-
-#### TEST ####################
-
-TestRunner.elm = test/TestRunner.elm
-Test.html = $(BUILD_DIR)/test.html
-test: $(Test.html)
-$(Test.html): $(TestRunner.elm)
-	$(CC) $(TestRunner.elm) --output $(Test.html)
-
-test/open: clean test
-	$(OPEN) $(Test.html)
-
