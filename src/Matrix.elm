@@ -17,6 +17,9 @@ module Matrix exposing (..)
 ## Transform
 @docs map, mapWithLocation, flatten
 
+## Zipping
+@docs zip, unzip
+
 ## Get and Set
 @docs get, set, update
 
@@ -30,6 +33,7 @@ module Matrix exposing (..)
 
 import Array
 import List
+import List.Extra
 import Maybe exposing (..)
 
 
@@ -137,6 +141,41 @@ mapWithLocation f m =
                 row
         )
         m
+
+
+{-| Zip two matrices.
+
+  let
+    numbers = fromList [[1, 2], [3, 4]]
+    letters = fromList [["A", "B"], ["C", "D"]]
+  in
+    zip numbers letters == [[(1,"A"), (2,"B")], [(3,"C"), (4,"D")]]
+
+-}
+zip : Matrix a -> Matrix b -> Matrix (a, b)
+zip first second =
+  List.Extra.zip (toList first) (toList second)
+    |> List.map (uncurry List.Extra.zip)
+    |> fromList
+
+
+{-| Unzip two matrices into a tuple of matrices.
+
+  let
+    numbers = fromList [[1, 2], [3, 4]]
+    letters = fromList [["A", "B"], ["C", "D"]]
+    zippedMatrix = fromList [[(1,"A"), (2,"B")], [(3,"C"), (4,"D")]]
+  in
+    unzip zippedMatrix == (numbers, letters)
+
+-}
+unzip : Matrix (a, b) -> (Matrix a, Matrix b)
+unzip zipped =
+  toList zipped
+    |> List.map (List.unzip)
+    |> List.unzip
+    |> Tuple.mapFirst fromList
+    |> Tuple.mapSecond fromList
 
 
 {-| Convert a matrix to a list of lists

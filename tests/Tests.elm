@@ -42,6 +42,27 @@ suite =
         in
           Expect.equal actual expected
 
+    , test "Matrix.zip" <|
+      \() ->
+        let
+          numbers = Matrix.fromList [[1,2],[3,4]]
+          letters = Matrix.fromList [["A","B"],["C","D"]]
+          actual = Matrix.zip numbers letters
+          expected = Matrix.fromList [[(1,"A"),(2,"B")],[(3,"C"),(4,"D")]]
+        in
+          Expect.equal actual expected
+
+    , test "Matrix.unzip" <|
+      \() ->
+        let
+          zipped = Matrix.fromList [[(1,"A"),(2,"B")],[(3,"C"),(4,"D")]]
+          actual = Matrix.unzip zipped
+          numbers = Matrix.fromList [[1,2],[3,4]]
+          letters = Matrix.fromList [["A","B"],["C","D"]]
+          expected = (numbers, letters)
+        in
+          Expect.equal actual expected
+
     , test "Matrix.toList" <|
       \() ->
         let
