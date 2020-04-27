@@ -1,7 +1,7 @@
 module Shrink.Matrix exposing (..)
 
-import Shrink exposing (Shrinker, array)
 import Matrix exposing (Matrix)
+import Shrink exposing (Shrinker, array)
 
 
 matrix : Shrinker a -> Shrinker (Matrix a)

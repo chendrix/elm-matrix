@@ -1,25 +1,23 @@
-module Check.Runner.Browser
-    exposing
-        ( display
-        , displayVerbose
-        )
+module Check.Runner.Browser exposing (display, displayVerbose)
 
 {-| Browser test runner for elm-check. This module provides functions to
 run and visualize tests in the browser.
 
+
 # Display Test Results
+
 @docs display, displayVerbose
 
 -}
 
-import Check exposing (Evidence(..), UnitEvidence, SuccessOptions, FailureOptions)
-import Html exposing (Html, Attribute, div, text, ul, ol, li)
+import Check exposing (Evidence(..), FailureOptions, SuccessOptions, UnitEvidence)
+import Html exposing (Attribute, Html, div, li, ol, text, ul)
 import Html.Attributes exposing (style)
 import List
 
 
 (:::) =
-    (,)
+    \a b -> ( a, b )
 
 
 type alias Style =
@@ -46,6 +44,7 @@ toColor : Bool -> String
 toColor b =
     if b then
         nephritis
+
     else
         pomegranate
 
@@ -164,13 +163,14 @@ displayUnit b unitEvidence =
                 verboseParts =
                     if not b then
                         []
+
                     else
                         [ li
                             []
-                            [ text ("Seed: " ++ (toString options.seed)) ]
+                            [ text ("Seed: " ++ toString options.seed) ]
                         , li
                             []
-                            [ text ("Number of shrinking operations performed: " ++ (toString options.numberOfShrinks)) ]
+                            [ text ("Number of shrinking operations performed: " ++ toString options.numberOfShrinks) ]
                         , li
                             []
                             [ text "Before shrinking: "
@@ -189,23 +189,27 @@ displayUnit b unitEvidence =
                             ]
                         ]
             in
-                li
-                    [ style (unitStyle False) ]
-                    [ text
-                        (options.name ++ " FAILED after " ++ (toString options.numberOfChecks) ++ " check"
-                            ++ (if options.numberOfChecks == 1 then
-                                    ""
-                                else
-                                    "s"
-                               )
-                            ++ "!"
-                        )
-                    , ul
-                        [ style unitInnerStyle ]
-                        (essentialParts ++ verboseParts)
-                    ]
+            li
+                [ style (unitStyle False) ]
+                [ text
+                    (options.name
+                        ++ " FAILED after "
+                        ++ toString options.numberOfChecks
+                        ++ " check"
+                        ++ (if options.numberOfChecks == 1 then
+                                ""
+
+                            else
+                                "s"
+                           )
+                        ++ "!"
+                    )
+                , ul
+                    [ style unitInnerStyle ]
+                    (essentialParts ++ verboseParts)
+                ]
 
 
 successMessage : SuccessOptions -> String
 successMessage { name, seed, numberOfChecks } =
-    name ++ " passed after " ++ (toString numberOfChecks) ++ " checks."
+    name ++ " passed after " ++ toString numberOfChecks ++ " checks."

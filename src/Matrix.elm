@@ -3,27 +3,39 @@ module Matrix exposing (..)
 {-| A library for creating and using 2-D matrices/grids. Geared towards
 2-D games.
 
+
 # Locations
 
 @docs Location, loc, row, col
+
 
 # Matrices
 
 @docs Matrix
 
+
 ## Create
+
 @docs matrix, square, fromList
 
+
 ## Transform
+
 @docs map, mapWithLocation, flatten
 
+
 ## Get and Set
+
 @docs get, set, update
 
+
 ## Properties
+
 @docs colCount, rowCount
 
+
 ## Convert to other types
+
 @docs toList
 
 -}
@@ -34,7 +46,6 @@ import Maybe exposing (..)
 
 
 {-| An ordered collection of elements, all of a particular type, arranged into `m` rows and `n` columns.
-
 -}
 type alias Matrix a =
     Array.Array (Array.Array a)
@@ -50,7 +61,7 @@ type alias Location =
 -}
 loc : Int -> Int -> Location
 loc =
-    (,)
+    \a b -> ( a, b )
 
 
 {-| Extract the row number from a location
@@ -75,8 +86,11 @@ col =
 
 {-| Create a square matrix of a certain size
 
-    square 2 (\_ -> 'H') == H H
-                            H H
+    square 2 (\_ -> 'H')
+        == H H
+            H
+            H
+
 -}
 square : Int -> (Location -> a) -> Matrix a
 square size =
@@ -87,14 +101,24 @@ square size =
 Delegates to a function of type `Location -> a` to determine value to
 place at each element in the matrix.
 
-    matrix 3 5 (\location ->
-      if (isEven (row location)) then "Hello" else "World")
+    matrix 3
+        5
+        (\location ->
+            if isEven (row location) then
+                "Hello"
+
+            else
+                "World"
+        )
 
 will give back the matrix
 
     Hello Hello Hello Hello Hello
+
     World World World World World
+
     Hello Hello Hello Hello Hello
+
 -}
 matrix : Int -> Int -> (Location -> a) -> Matrix a
 matrix numRows numCols f =
@@ -107,7 +131,8 @@ matrix numRows numCols f =
 
 {-| Apply the function to every element in the matrix
 
-    map not (fromList [[True, False], [False, True]]) == fromList [[False, True], [True, False]]
+    map not (fromList [ [ True, False ], [ False, True ] ]) == fromList [ [ False, True ], [ True, False ] ]
+
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f m =
@@ -118,12 +143,17 @@ map f m =
 is the location of the element.
 
     let
-      m = (square 2 (\_ -> 1))
-      f location element = if row location == col location
-                            then element * 2
-                            else element
+        m =
+            square 2 (\_ -> 1)
+
+        f location element =
+            if row location == col location then
+                element * 2
+
+            else
+                element
     in
-      mapWithLocation f m == fromList [[2, 1], [1, 2]]
+    mapWithLocation f m == fromList [ [ 2, 1 ], [ 1, 2 ] ]
 
 -}
 mapWithLocation : (Location -> a -> b) -> Matrix a -> Matrix b
@@ -141,7 +171,7 @@ mapWithLocation f m =
 
 {-| Convert a matrix to a list of lists
 
-    toList (fromList [[1, 0], [0, 1]]) == [[1, 0], [0, 1]]
+    toList (fromList [ [ 1, 0 ], [ 0, 1 ] ]) == [ [ 1, 0 ], [ 0, 1 ] ]
 
 -}
 toList : Matrix a -> List (List a)
@@ -152,7 +182,16 @@ toList m =
 
 {-| Convert a list of lists into a matrix
 
-    fromList [[1, 0], [0, 1]] == square 2 (\l -> if row l == col l then 1 else 0)
+    fromList [ [ 1, 0 ], [ 0, 1 ] ]
+        == square 2
+            (\l ->
+                if row l == col l then
+                    1
+
+                else
+                    0
+            )
+
 -}
 fromList : List (List a) -> Matrix a
 fromList l =
@@ -163,9 +202,11 @@ fromList l =
 {-| Convert a matrix to a single list
 
     let
-      m = fromList [[0, 1], [2, 3], [4, 5]]
+        m =
+            fromList [ [ 0, 1 ], [ 2, 3 ], [ 4, 5 ] ]
     in
-      flatten m == [0, 1, 2, 3, 4, 5]
+    flatten m == [ 0, 1, 2, 3, 4, 5 ]
+
 -}
 flatten : Matrix a -> List a
 flatten m =
@@ -176,7 +217,8 @@ flatten m =
 
     get (loc -1 1) (square 2 (\_ -> True)) == Nothing
 
-    get (loc 1 1) (fromList [[0, 1], [2, 3]]) == Just 3
+    get (loc 1 1) (fromList [ [ 0, 1 ], [ 2, 3 ] ]) == Just 3
+
 -}
 get : Location -> Matrix a -> Maybe a
 get location m =
@@ -187,7 +229,8 @@ get location m =
 
     set (loc -1 1) 42 (square 2 (\_ -> True)) == square 2 (\_ -> True)
 
-    set (loc 1 1) 42 (fromList [[0, 1], [2, 3]]) == fromList [[0, 1], [2, 42]]
+    set (loc 1 1) 42 (fromList [ [ 0, 1 ], [ 2, 3 ] ]) == fromList [ [ 0, 1 ], [ 2, 42 ] ]
+
 -}
 set : Location -> a -> Matrix a -> Matrix a
 set location value m =
@@ -195,7 +238,6 @@ set location value m =
 
 
 {-| Update the element at a particular location using the current value
-
 -}
 update : Location -> (a -> a) -> Matrix a -> Matrix a
 update location f m =

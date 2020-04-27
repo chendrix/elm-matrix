@@ -3,9 +3,9 @@ module MatrixTest exposing (..)
 import Check exposing (..)
 import Check.Producer exposing (..)
 import Check.Producer.Matrix exposing (..)
-import Maybe as M exposing (..)
 import Debug
 import Matrix
+import Maybe as M exposing (..)
 
 
 tests =
@@ -26,7 +26,7 @@ claim_map_with_location_is_idempotent =
                 )
                 (\matrix -> Matrix.mapWithLocation (\loc _ -> loc) matrix)
             )
-            (identity)
+            identity
         )
         (matrixUsing identity)
 
@@ -56,7 +56,7 @@ claim_square_makes_the_right_sized_matrix =
                     matrix =
                         Matrix.square size identity
                 in
-                    Matrix.rowCount matrix == size && Matrix.colCount matrix == size
+                Matrix.rowCount matrix == size && Matrix.colCount matrix == size
             )
         )
         (rangeInt 0 50)
